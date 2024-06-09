@@ -1,36 +1,34 @@
 {
-	"schemaVersion": 1,
-	"id": "item-collection-tracker",
-	"version": "${version}",
-	"name": "Item Collection Tracker",
-	"description": "This is an example description! Tell everyone what your mod is about!",
-	"authors": [
-		"Vivek Raman"
-	],
-	"contact": {
-		"homepage": "https://vivekraman.dev/",
-		"sources": "https://github.com/Vivek-Raman/item-collection-tracker"
-	},
-	"license": "CC0-1.0",
-	"icon": "assets/item-collection-tracker/icon.png",
-	"environment": "client",
-	"entrypoints": {
-		"client": [
-			"dev.vivekraman.ItemCollectionTracker"
-		]
-	},
-	"mixins": [
-		{
-			"config": "item-collection-tracker.client.mixins.json",
-			"environment": "client"
-		}
-	],
-	"depends": {
-		"fabricloader": ">=0.15.10",
-		"minecraft": "~1.20.6",
-		"java": ">=21",
-		"fabric-api": "*"
-	},
-	"suggests": {
-	}
+  "schemaVersion": 1,
+  "id": "item-collection-tracker",
+  "version": "${version}",
+  "name": "Item Collection Tracker",
+  "description": "This is an example description! Tell everyone what your mod is about!",
+  "authors": [
+    "Vivek Raman"
+  ],
+  "contact": {
+    "homepage": "https://vivekraman.dev/",
+    "sources": "https://github.com/Vivek-Raman/item-collection-tracker"
+  },
+  "license": "CC0-1.0",
+  "icon": "assets/item-collection-tracker/icon.png",
+  "environment": "*",
+  "entrypoints": {
+    "client": [
+      "dev.vivekraman.ItemCollectionTracker"
+    ]
+  },
+  "mixins": [
+    "item-collection-tracker.mixins.json"
+  ],
+  "depends": {
+    "java": ">=17",
+    "minecraft": "~1.20.6",
+    "fabricloader": ">=0.15.10",
+    "fabric": "*",
+    "fabric-api": "*"
+  },
+  "suggests": {
+  }
 }
