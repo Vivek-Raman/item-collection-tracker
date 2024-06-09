@@ -31,16 +31,24 @@ public abstract class ClientPlayNetworkHandlerMixin implements TickablePacketLis
 
   @Inject(method = "onItemPickupAnimation", at = @At("HEAD"))
   public void onItemPickupAnimation(ItemPickupAnimationS2CPacket packet, CallbackInfo ci) {
+    log.trace("received packet onItemPickupAnimation {}", packet);
+
     MinecraftClient client = MinecraftClient.getInstance();
     NetworkThreadUtils.forceMainThread(packet, this, client);
 
-//        if (player.getId() != packet.getCollectorEntityId()) {
-//            return;
-//        }
+    ClientPlayerEntity player = client.player;
+    if (Objects.isNull(player) || player.getId() != packet.getCollectorEntityId()) {
+      return;
+    }
 
     Entity entity = this.world.getEntityById(packet.getEntityId());
     if (entity instanceof ItemEntity collectedItem) {
-      ClassRegistry.supply(ItemCollectedHandler.class).handleItemCollected(client.player, collectedItem);
+      ItemCollectedHandler handler = ClassRegistry.supply(ItemCollectedHandler.class);
+      if (Objects.nonNull(handler)) {
+        handler.handleItemCollected(client.player, collectedItem);
+      } else {
+        log.error("Failed to find handler, mod initialization is improper.");
+      }
     }
   }
 }

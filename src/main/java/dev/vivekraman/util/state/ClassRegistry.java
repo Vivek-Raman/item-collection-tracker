@@ -35,6 +35,6 @@ public class ClassRegistry {
 
   @SuppressWarnings("unchecked")
   public static <T extends Registerable> T supply(Class<T> clazz) {
-    return Objects.requireNonNull((T) ClassRegistry.instance.classes.get(clazz.getName()));
+    return (T) ClassRegistry.instance.classes.get(clazz.getName());
   }
 }

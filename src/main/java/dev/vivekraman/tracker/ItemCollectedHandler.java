@@ -11,5 +11,7 @@ public class ItemCollectedHandler implements Registerable {
 
   public void handleItemCollected(ClientPlayerEntity player, ItemEntity collectedItem) {
     log.info("{} collected item {}", player.getName(), collectedItem.getName());
+
+    // TODO: push to operation queue
   }
 }
