@@ -1,6 +1,7 @@
 package dev.vivekraman;
 
 import dev.vivekraman.tracker.ItemCollectedHandler;
+import dev.vivekraman.tracker.api.PersistenceAPI;
 import dev.vivekraman.util.logging.MyLogger;
 import dev.vivekraman.util.state.ClassRegistry;
 import net.fabricmc.api.ClientModInitializer;
@@ -16,6 +17,7 @@ public class ItemCollectionTracker implements ClientModInitializer {
   public void onInitializeClient() {
     ClassRegistry.init(log);
     try {
+      ClassRegistry.register(new PersistenceAPI());
       ClassRegistry.register(new ItemCollectedHandler());
     } catch (Exception e) {
       log.error("Failed to register classes! ", e);
