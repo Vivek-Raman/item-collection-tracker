@@ -16,11 +16,17 @@
   "environment": "*",
   "entrypoints": {
     "client": [
-      "dev.vivekraman.ItemCollectionTracker"
+      "dev.vivekraman.tracker.ItemCollectionTrackerClient"
+    ],
+    "main": [
+      "dev.vivekraman.tracker.ItemCollectionTracker"
     ]
   },
   "mixins": [
-    "item-collection-tracker.mixins.json"
+    {
+      "config": "item-collection-tracker.client.mixins.json",
+      "environment": "client"
+    }
   ],
   "depends": {
     "java": ">=17",

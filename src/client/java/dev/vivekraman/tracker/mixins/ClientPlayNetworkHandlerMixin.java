@@ -1,6 +1,6 @@
-package dev.vivekraman.mixins;
+package dev.vivekraman.tracker.mixins;
 
-import dev.vivekraman.tracker.ItemCollectedHandler;
+import dev.vivekraman.tracker.service.ItemCollectedHandler;
 import dev.vivekraman.util.logging.MyLogger;
 import dev.vivekraman.util.state.ClassRegistry;
 import net.minecraft.client.MinecraftClient;
@@ -31,8 +31,6 @@ public abstract class ClientPlayNetworkHandlerMixin implements TickablePacketLis
 
   @Inject(method = "onItemPickupAnimation", at = @At("HEAD"))
   public void onItemPickupAnimation(ItemPickupAnimationS2CPacket packet, CallbackInfo ci) {
-    log.trace("received packet onItemPickupAnimation {}", packet);
-
     MinecraftClient client = MinecraftClient.getInstance();
     NetworkThreadUtils.forceMainThread(packet, this, client);
 
@@ -43,7 +41,7 @@ public abstract class ClientPlayNetworkHandlerMixin implements TickablePacketLis
 
     Entity entity = this.world.getEntityById(packet.getEntityId());
     if (entity instanceof ItemEntity collectedItem) {
-      ItemCollectedHandler handler = ClassRegistry.supply(ItemCollectedHandler.class);
+      ItemCollectedHandler handler = ClassRegistry.supplyClient(ItemCollectedHandler.class);
       if (Objects.nonNull(handler)) {
         handler.handleItemCollected(client.player, collectedItem);
       } else {

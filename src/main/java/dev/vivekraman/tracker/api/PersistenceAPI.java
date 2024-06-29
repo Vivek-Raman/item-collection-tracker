@@ -2,7 +2,7 @@ package dev.vivekraman.tracker.api;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import dev.vivekraman.tracker.model.Operation;
+import dev.vivekraman.tracker.api.model.Operation;
 import dev.vivekraman.util.logging.MyLogger;
 import dev.vivekraman.util.state.Registerable;
 import org.apache.http.HttpStatus;
@@ -15,6 +15,7 @@ import java.net.http.HttpResponse;
 import java.nio.charset.Charset;
 import java.util.List;
 
+@Deprecated
 public class PersistenceAPI implements Registerable {
   private static final String BASE_URL_LOCAL = "http://localhost:9000/";
   private static final String BASE_URL_PROD = "https://backend.vivekraman.dev/";
@@ -49,6 +50,6 @@ public class PersistenceAPI implements Registerable {
     HttpRequest.Builder request = HttpRequest.newBuilder(URI.create(BASE_URL_LOCAL)
             .resolve("/item-collection-tracker/operations"))
         .POST(HttpRequest.BodyPublishers.ofString(gson.toJson(operations), Charset.defaultCharset()));
-    callAPI(request, onSuccess);
+//    callAPI(request, onSuccess);
   }
 }
