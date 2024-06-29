@@ -3,6 +3,7 @@ package dev.vivekraman.tracker;
 import dev.vivekraman.tracker.persistence.LocalPersistence;
 import dev.vivekraman.tracker.network.ItemCollectedPayload;
 import dev.vivekraman.tracker.service.OperationService;
+import dev.vivekraman.tracker.service.PlayerService;
 import dev.vivekraman.util.Constants;
 import dev.vivekraman.util.logging.MyLogger;
 import dev.vivekraman.util.state.ClassRegistry;
@@ -18,14 +19,11 @@ public class ItemCollectionTracker implements ModInitializer {
   public void onInitialize() {
     PayloadTypeRegistry.playC2S().register(ItemCollectedPayload.ID, ItemCollectedPayload.CODEC);
 
-    ServerPlayNetworking.registerGlobalReceiver(ItemCollectedPayload.ID, ((payload, context) -> {
-      log.info("{} received from client!", payload.operation());
-      LocalPersistence persistence = LocalPersistence.loadFromServer(context.player().getServer());
-      ClassRegistry.supply(OperationService.class).persistOperation(persistence, payload.operation());
-    }));
+
 
     try {
       ClassRegistry.init(log);
+      ClassRegistry.register(new PlayerService());
       ClassRegistry.register(new OperationService());
     } catch (Exception e) {
       log.error("Failed to register classes! ", e);

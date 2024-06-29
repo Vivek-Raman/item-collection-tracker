@@ -8,7 +8,6 @@ import dev.vivekraman.util.state.Registerable;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.entity.ItemEntity;
-import net.minecraft.text.Text;
 import org.apache.logging.log4j.Logger;
 
 import java.util.Date;
@@ -23,7 +22,6 @@ public class ItemCollectedHandler implements Registerable {
   }
 
   public void handleItemCollected(ClientPlayerEntity player, ItemEntity collectedItem) {
-//    player.sendMessage(Text.literal("You collected a " + collectedItem.getName() + "!"));
     List<Operation> list = List.of(Operation.builder()
         .itemCode(collectedItem.getStack().getName().getString())
         .type(OperationType.REGISTER)
@@ -31,7 +29,5 @@ public class ItemCollectedHandler implements Registerable {
         .collectedBy(player.getNameForScoreboard())
         .collectedOn(new Date()).build());
     ClientPlayNetworking.send(new ItemCollectedPayload(list.getFirst()));
-
-//    persistenceAPI.persistOperations(list, () -> log.info("API success, {}", list));
   }
 }

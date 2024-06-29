@@ -36,13 +36,16 @@ public class LocalPersistence extends PersistentState {
     Optional.ofNullable(localState.getChecklists()).orElseGet(Collections::emptyMap).forEach((identifier, checklist) -> {
       NbtCompound checklistTag = new NbtCompound();
       checklistTag.putString("identifier", checklist.getIdentifier());
+      checklistTag.putLong("updatedOn", checklist.getUpdatedOn().getTime());
+      NbtCompound collectionTag = new NbtCompound();
       checklist.getCollectionInfo().forEach((itemCode, collectionInfo) -> {
         NbtCompound collectionInfoTag = new NbtCompound();
         collectionInfoTag.putString("collectedBy", collectionInfo.getCollectedBy());
         collectionInfoTag.putLong("collectedOn", collectionInfo.getCollectedOn().getTime());
-        checklistTag.put(itemCode, collectionInfoTag);
+        collectionTag.put(itemCode, collectionInfoTag);
       });
 
+      checklistTag.put("collectionInfo", collectionTag);
       stateTag.put(checklist.getIdentifier(), checklistTag);
     });
 
@@ -54,17 +57,17 @@ public class LocalPersistence extends PersistentState {
   }
 
   public static LocalPersistence readNbt(NbtCompound tag) {
-    LocalState incomingState = new LocalState();
 
+    Map<String, LocalChecklist> checklists = new LinkedHashMap<>();
     NbtCompound stateTag = tag.getCompound(Constants.MOD_ID);
-    Set<String> identifiers = stateTag.getKeys();
 
-    identifiers.forEach(identifier -> {
+    stateTag.getKeys().forEach(identifier -> {
       NbtCompound checklistTag = stateTag.getCompound(identifier);
-      LocalChecklist checklist = new LocalChecklist();
-      checklist.setIdentifier(identifier);
-      checklist.setUpdatedOn(new Date(checklistTag.getLong("updatedOn")));
-      // TODO: validate updatedOn before overwriting local state
+      LocalChecklist checklist = LocalChecklist.builder()
+          .identifier(identifier)
+          .updatedOn(new Date(checklistTag.getLong("updatedOn")))
+          .collectionInfo(new LinkedHashMap<>())
+          .build();
 
       NbtCompound collectionsTag = checklistTag.getCompound("collectionInfo");
       Map<String, LocalChecklist.CollectionInfo> collectionInfoMap = new LinkedHashMap<>();
@@ -73,12 +76,14 @@ public class LocalPersistence extends PersistentState {
         LocalChecklist.CollectionInfo collectionInfo = new LocalChecklist.CollectionInfo();
         collectionInfo.setCollectedBy(collectionInfoTag.getString("collectedBy"));
         collectionInfo.setCollectedOn(new Date(collectionInfoTag.getLong("collectedOn")));
-        checklist.getCollectionInfo().putIfAbsent(itemCode, collectionInfo);
+        collectionInfoMap.putIfAbsent(itemCode, collectionInfo);
       });
+
       checklist.setCollectionInfo(collectionInfoMap);
+      checklists.put(identifier, checklist);
     });
 
-    return new LocalPersistence(incomingState);
+    return new LocalPersistence(new LocalState(checklists));
   }
 
   public static LocalPersistence loadFromServer(MinecraftServer server) {
