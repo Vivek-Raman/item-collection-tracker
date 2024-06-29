@@ -38,6 +38,11 @@ public class ChecklistScreenProvider implements Registerable {
   }
 
   public Screen buildScreen(LocalChecklist checklist) {
+    // TODO: if checklist is null, then active identifier is likely null
+    // TODO: add a text field at the top to set the active identifier (add a lock mechanism to prevent accidental change)
+    // TODO: when active identifier is changed, send a packet to persist active identifier to world state
+    // TODO: consume this packet on the server and update state, publish full sync packet to clients
+
     ConfigBuilder builder = ConfigBuilder.create();
     builder.setTitle(Text.translatable("checklist.title"));
     ConfigCategory category = builder.getOrCreateCategory(Text.translatable("checklist.category.item"));

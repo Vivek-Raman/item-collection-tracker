@@ -14,6 +14,8 @@ import java.util.Objects;
 public class LocalStateService implements Registerable {
   @Getter private LocalState localState;
 
+  // TODO: set up initial state with no active identifier
+
   public void syncWithServerState(ServerState serverState) {
     if (Objects.isNull(localState.getIdentifier()) || localState.getIdentifier().isEmpty()) {
       return;
