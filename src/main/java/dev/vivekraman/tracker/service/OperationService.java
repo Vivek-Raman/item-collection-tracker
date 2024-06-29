@@ -71,6 +71,5 @@ public class OperationService implements Registerable {
     }
 
     persistence.setDirty(dirty);
-    log.info("Persisted operation {}, dirty {} to State", operation, dirty);
   }
 }
