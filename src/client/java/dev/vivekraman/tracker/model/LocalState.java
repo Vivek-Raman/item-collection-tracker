@@ -5,12 +5,11 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
-import java.util.Map;
-
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
 public class LocalState {
-  private Map<String, LocalChecklist> checklists;
+  private String identifier;
+  private LocalChecklist checklist;
 }

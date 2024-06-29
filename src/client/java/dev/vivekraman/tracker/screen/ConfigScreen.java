@@ -1,4 +1,4 @@
-package dev.vivekraman.tracker.config.screen;
+package dev.vivekraman.tracker.screen;
 
 import com.terraformersmc.modmenu.api.ConfigScreenFactory;
 import com.terraformersmc.modmenu.api.ModMenuApi;
