@@ -4,6 +4,7 @@ import dev.vivekraman.tracker.model.LocalState;
 import dev.vivekraman.tracker.network.SyncStatePayload;
 import dev.vivekraman.tracker.persistence.ServerPersistence;
 import dev.vivekraman.tracker.screen.ChecklistScreenProvider;
+import dev.vivekraman.tracker.screen.UIProvider;
 import dev.vivekraman.tracker.service.ItemCollectedHandler;
 import dev.vivekraman.tracker.service.LocalStateService;
 import dev.vivekraman.util.Constants;
@@ -24,16 +25,20 @@ public class ItemCollectionTrackerClient implements ClientModInitializer {
     ClassRegistry.initClient(log);
     try {
 //      ClassRegistry.register(new PersistenceAPI());
-      ClassRegistry.registerClient(new LocalStateService());
+      ClassRegistry.registerClient(new LocalStateService(new LocalState()));
       ClassRegistry.registerClient(new ItemCollectedHandler());
+
       ClassRegistry.registerClient(new ChecklistScreenProvider());
+      ClassRegistry.registerClient(new UIProvider());
     } catch (Exception e) {
       log.error("Failed to register classes! ", e);
     }
+
     ClientPlayNetworking.registerGlobalReceiver(SyncStatePayload.ID, ((payload, context) -> {
       ServerPersistence persistence = ServerPersistence.readNbt(payload.persistenceTag());
       ClassRegistry.supplyClient(LocalStateService.class).syncWithServerState(persistence.getServerState());
     }));
+
     log.info("{} initialized on the client!", Constants.MOD_ID);
   }
 }

@@ -1,5 +1,6 @@
 package dev.vivekraman.util.logging;
 
+import dev.vivekraman.util.Constants;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.message.AbstractMessageFactory;
@@ -7,8 +8,8 @@ import org.apache.logging.log4j.message.Message;
 import org.apache.logging.log4j.message.ParameterizedMessageFactory;
 
 public class MyLogger {
-  private static final String PREFIX = "item-collection-tracker";
-  private static final Logger logger = LogManager.getLogger("item-collection-tracker", new MyMessageFactory(PREFIX));
+  private static final String PREFIX = Constants.MOD_ID;
+  private static final Logger logger = LogManager.getLogger(Constants.MOD_ID, new MyMessageFactory(PREFIX));
 
   public static Logger get() {
     return logger;

@@ -5,16 +5,16 @@ import dev.vivekraman.tracker.model.LocalState;
 import dev.vivekraman.tracker.model.ServerChecklist;
 import dev.vivekraman.tracker.model.ServerState;
 import dev.vivekraman.util.state.Registerable;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Objects;
 
+@AllArgsConstructor
 public class LocalStateService implements Registerable {
   @Getter private LocalState localState;
-
-  // TODO: set up initial state with no active identifier
 
   public void syncWithServerState(ServerState serverState) {
     if (Objects.isNull(localState.getIdentifier()) || localState.getIdentifier().isEmpty()) {
