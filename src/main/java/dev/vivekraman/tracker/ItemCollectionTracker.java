@@ -1,15 +1,13 @@
 package dev.vivekraman.tracker;
 
-import dev.vivekraman.tracker.persistence.LocalPersistence;
-import dev.vivekraman.tracker.network.ItemCollectedPayload;
+import dev.vivekraman.tracker.service.NetworkService;
 import dev.vivekraman.tracker.service.OperationService;
 import dev.vivekraman.tracker.service.PlayerService;
+import dev.vivekraman.tracker.service.StateService;
 import dev.vivekraman.util.Constants;
 import dev.vivekraman.util.logging.MyLogger;
 import dev.vivekraman.util.state.ClassRegistry;
 import net.fabricmc.api.ModInitializer;
-import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
-import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import org.apache.logging.log4j.Logger;
 
 public class ItemCollectionTracker implements ModInitializer {
@@ -17,12 +15,10 @@ public class ItemCollectionTracker implements ModInitializer {
 
   @Override
   public void onInitialize() {
-    PayloadTypeRegistry.playC2S().register(ItemCollectedPayload.ID, ItemCollectedPayload.CODEC);
-
-
-
     try {
       ClassRegistry.init(log);
+      ClassRegistry.register(new NetworkService());
+      ClassRegistry.register(new StateService());
       ClassRegistry.register(new PlayerService());
       ClassRegistry.register(new OperationService());
     } catch (Exception e) {

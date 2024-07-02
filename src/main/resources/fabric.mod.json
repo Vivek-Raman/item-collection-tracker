@@ -15,9 +15,6 @@
   "icon": "assets/item-collection-tracker/icon.png",
   "environment": "*",
   "entrypoints": {
-    "modmenu": [
-      "dev.vivekraman.tracker.config.screen.ConfigScreen"
-    ],
     "client": [
       "dev.vivekraman.tracker.ItemCollectionTrackerClient"
     ],
