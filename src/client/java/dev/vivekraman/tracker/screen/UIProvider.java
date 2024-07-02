@@ -8,7 +8,9 @@ import dev.vivekraman.util.state.ClassRegistry;
 import dev.vivekraman.util.state.Registerable;
 import net.fabricmc.fabric.api.client.screen.v1.ScreenEvents;
 import net.fabricmc.fabric.api.client.screen.v1.Screens;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.GameMenuScreen;
+import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.text.Text;
 import org.apache.logging.log4j.Logger;
@@ -26,15 +28,15 @@ public class UIProvider implements Registerable {
     // add button to pause menu
     ScreenEvents.AFTER_INIT.register((client, screen, scaledWidth, scaledHeight) -> {
       if (screen instanceof GameMenuScreen) {
-        Screens.getButtons(screen).add(ButtonWidget.builder(Text.translatable("checklist.open-button"),
-            this::handleOpenChecklistPressed).build());
+        client.execute(() -> {
+          Screens.getButtons(screen).add(ButtonWidget.builder(Text.translatable("checklist.open-button"),
+              buttonWidget -> handleOpenChecklistPressed(screen, buttonWidget)).build());
+        });
       }
     });
   }
 
-  private void handleOpenChecklistPressed(ButtonWidget buttonWidget) {
-    LocalState state = ClassRegistry.supplyClient(LocalStateService.class).getLocalState();
-    log.info("Dump state {}", state);
-//      MinecraftClient.getInstance().setScreen(buildScreen(checklist));
+  private void handleOpenChecklistPressed(Screen parentScreen, ButtonWidget buttonWidget) {
+    MinecraftClient.getInstance().setScreen(checklistScreenProvider.buildScreen(parentScreen));
   }
 }

@@ -1,7 +1,6 @@
 package dev.vivekraman.tracker;
 
-import dev.vivekraman.tracker.network.ItemCollectedPayload;
-import dev.vivekraman.tracker.network.SyncStatePayload;
+import dev.vivekraman.tracker.service.NetworkService;
 import dev.vivekraman.tracker.service.OperationService;
 import dev.vivekraman.tracker.service.PlayerService;
 import dev.vivekraman.tracker.service.StateService;
@@ -9,7 +8,6 @@ import dev.vivekraman.util.Constants;
 import dev.vivekraman.util.logging.MyLogger;
 import dev.vivekraman.util.state.ClassRegistry;
 import net.fabricmc.api.ModInitializer;
-import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
 import org.apache.logging.log4j.Logger;
 
 public class ItemCollectionTracker implements ModInitializer {
@@ -17,14 +15,12 @@ public class ItemCollectionTracker implements ModInitializer {
 
   @Override
   public void onInitialize() {
-    PayloadTypeRegistry.playC2S().register(ItemCollectedPayload.ID, ItemCollectedPayload.CODEC);
-    PayloadTypeRegistry.playS2C().register(SyncStatePayload.ID, SyncStatePayload.CODEC);
-
     try {
       ClassRegistry.init(log);
+      ClassRegistry.register(new NetworkService());
+      ClassRegistry.register(new StateService());
       ClassRegistry.register(new PlayerService());
       ClassRegistry.register(new OperationService());
-      ClassRegistry.register(new StateService());
     } catch (Exception e) {
       log.error("Failed to register classes! ", e);
     }

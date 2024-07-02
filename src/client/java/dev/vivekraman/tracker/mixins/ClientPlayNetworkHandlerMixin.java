@@ -42,11 +42,7 @@ public abstract class ClientPlayNetworkHandlerMixin implements TickablePacketLis
     Entity entity = this.world.getEntityById(packet.getEntityId());
     if (entity instanceof ItemEntity collectedItem) {
       ItemCollectedHandler handler = ClassRegistry.supplyClient(ItemCollectedHandler.class);
-      if (Objects.nonNull(handler)) {
-        handler.handleItemCollected(client.player, collectedItem);
-      } else {
-        log.error("Failed to find handler, mod initialization is improper.");
-      }
+      handler.handleItemCollected(client.player, collectedItem);
     }
   }
 }

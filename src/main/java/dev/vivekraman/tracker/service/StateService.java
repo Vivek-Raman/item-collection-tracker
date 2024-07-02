@@ -13,12 +13,12 @@ public class StateService implements Registerable {
     Registerable.super.init();
 
     ServerPlayConnectionEvents.JOIN.register((handler, sender, server) -> {
-      pushStateToClient(handler.getPlayer());
+      ServerPersistence persistence = ServerPersistence.loadFromServer(handler.getPlayer().getServer());
+      pushStateToClient(persistence, handler.getPlayer());
     });
   }
 
-  public void pushStateToClient(ServerPlayerEntity player) {
-    ServerPersistence persistence = ServerPersistence.loadFromServer(player.getServer());
+  public void pushStateToClient(ServerPersistence persistence, ServerPlayerEntity player) {
     ServerPlayNetworking.send(player, new SyncStatePayload(
         ServerPersistence.convertToNbt(persistence.getServerState())));
   }

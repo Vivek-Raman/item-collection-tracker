@@ -20,11 +20,13 @@ public class OperationService implements Registerable {
   private final Logger log = MyLogger.get();
 
   private PlayerService playerService;
+  private StateService stateService;
 
   @Override
   public void init() throws Exception {
     Registerable.super.init();
     this.playerService = ClassRegistry.supply(PlayerService.class);
+    this.stateService = ClassRegistry.supply(StateService.class);
 
     registerOperationListener();
   }
@@ -67,7 +69,10 @@ public class OperationService implements Registerable {
           .collectedOn(operation.getCollectedOn())
           .build());
       checklist.setUpdatedOn(now);
-      playerService.notifyNewItemCollected(player, operation.getItemCode());
+
+      persistence.getServerState().getChecklists().put(operation.getIdentifier(), checklist);
+      playerService.notifyNewItemCollected(operation.getItemCode(), player);
+      stateService.pushStateToClient(persistence, player);
     }
 
     persistence.setDirty(dirty);

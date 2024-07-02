@@ -25,9 +25,7 @@ public class ServerPersistence extends PersistentState {
 
   @Override
   public NbtCompound writeNbt(NbtCompound nbt, RegistryWrapper.WrapperLookup registryLookup) {
-    NbtCompound stateTag = convertToNbt(serverState);
-    nbt.put(Constants.MOD_ID, stateTag);
-    return nbt;
+    return convertToNbt(serverState);
   }
 
   public static NbtCompound convertToNbt(ServerState serverState) {
@@ -48,15 +46,16 @@ public class ServerPersistence extends PersistentState {
       checklistsTag.put(checklist.getIdentifier(), checklistTag);
     });
 
-    NbtCompound stateTag = new NbtCompound();
-    stateTag.put("checklists", checklistsTag);
-
     NbtCompound activeIdentifiersTag = new NbtCompound();
     Optional.ofNullable(serverState.getActiveIdentifiers()).orElseGet(Collections::emptyMap).forEach((uuid, identifier) -> {
       activeIdentifiersTag.putString(uuid.toString(), identifier);
     });
+    NbtCompound stateTag = new NbtCompound();
+    stateTag.put("checklists", checklistsTag);
     stateTag.put("activeIdentifiers", activeIdentifiersTag);
-    return stateTag;
+    NbtCompound tag = new NbtCompound();
+    tag.put(Constants.MOD_ID, stateTag);
+    return tag;
   }
 
   public static ServerPersistence readNbt(NbtCompound tag, RegistryWrapper.WrapperLookup registryLookup) {

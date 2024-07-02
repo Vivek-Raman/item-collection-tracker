@@ -36,7 +36,8 @@ public class ItemCollectionTrackerClient implements ClientModInitializer {
 
     ClientPlayNetworking.registerGlobalReceiver(SyncStatePayload.ID, ((payload, context) -> {
       ServerPersistence persistence = ServerPersistence.readNbt(payload.persistenceTag());
-      ClassRegistry.supplyClient(LocalStateService.class).syncWithServerState(persistence.getServerState());
+      ClassRegistry.supplyClient(LocalStateService.class).syncWithServerState(
+          context.player(), persistence.getServerState());
     }));
 
     log.info("{} initialized on the client!", Constants.MOD_ID);
